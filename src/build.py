@@ -1,5 +1,5 @@
 """
-Generate output/ (5 pages, redirects for old URLs, robots.txt, sitemap.xml, the CV PDF).
+Generate output/ (5 pages + one case-study page per project, redirects for old URLs, robots.txt, sitemap.xml, the CV PDF).
 Edit src/content.py and run: python src/build.py (from project root)
 SITE_ENV=production builds the live site (indexable); anything else builds the noindex test site.
 """

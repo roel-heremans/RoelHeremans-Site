@@ -1,0 +1,96 @@
+{% extends "base.html.j2" %}
+{% from "partials/cta.html.j2" import cta with context %}
+{#- One page per CONTENT["work"]["earlier"]["items"] entry (page.project = its id). Same
+    building blocks as the featured cases on /work/: chips, prose, the facts side panel. -#}
+{% block content %}
+{%- set ui = content.ui %}
+{%- set items = content.work.earlier['items'] %}
+{%- set ns = namespace(i=0) %}
+{%- for p in items %}{% if p.id == page.project %}{% set ns.i = loop.index0 %}{% endif %}{% endfor %}
+{%- set c = items[ns.i] %}
+{%- set prev = items[ns.i - 1] if ns.i > 0 else none %}
+{%- set next = items[ns.i + 1] if ns.i + 1 < items | length else none %}
+
+<section class="hero hero--plain case-hero">
+  <div class="container">
+    <ul class="chips">
+      <li class="chip">{{ c.industry | e }}</li>
+{%- if c.engagement is defined %}
+      <li class="chip">{{ c.engagement | e }}</li>
+{%- endif %}
+    </ul>
+    <h1 class="display">{{ c.name | e }}</h1>
+    <p class="lead">{{ c.lede | e }}</p>
+  </div>
+</section>
+
+<section class="section section--surface case">
+  <div class="container case__grid">
+    <div class="prose" data-reveal>
+      <h2>{{ ui.case_challenge | e }}</h2>
+{%- for para in c.challenge %}
+      <p>{{ para | e }}</p>
+{%- endfor %}
+      <h2>{{ ui.case_did | e }}</h2>
+{%- for para in c.did %}
+      <p>{{ para | e }}</p>
+{%- endfor %}
+      <h2>{{ ui.case_results | e }}</h2>
+{%- for para in c.results %}
+      <p>{{ para | e }}</p>
+{%- endfor %}
+    </div>
+    <aside class="case__aside" data-reveal>
+      <dl class="facts">
+        <div class="facts__row facts__row--stack"><dt>{{ ui.case_client | e }}</dt><dd>{{ c.client | e }}</dd></div>
+{%- if c.period is defined %}
+        <div class="facts__row facts__row--stack"><dt>{{ ui.case_period | e }}</dt><dd>{{ c.period | e }}</dd></div>
+{%- endif %}
+        <div class="facts__row facts__row--stack"><dt>{{ ui.case_question | e }}</dt><dd>{{ c.question | e }}</dd></div>
+        <div class="facts__row facts__row--stack"><dt>{{ ui.case_stack | e }}</dt><dd>{{ c.stack | e }}</dd></div>
+        <div class="facts__row facts__row--stack"><dt>{{ ui.case_methods | e }}</dt><dd>{{ c.methods | e }}</dd></div>
+{%- if c.key_results is defined %}
+        <div class="facts__row facts__row--stack facts__row--results">
+          <dt>{{ ui.case_key_results | e }}</dt>
+          <dd>
+            <ul class="key-results">
+{%- for r in c.key_results %}
+              <li>{{ r | e }}</li>
+{%- endfor %}
+            </ul>
+          </dd>
+        </div>
+{%- endif %}
+      </dl>
+    </aside>
+  </div>
+</section>
+{%- if c.quote is defined %}
+
+<section class="section section--feature case-quote">
+  <div class="container" data-reveal>
+    <p class="eyebrow center">{{ ui.case_quote | e }}</p>
+    <figure class="pull-quote">
+      <blockquote><p>&ldquo;{{ c.quote.text | e }}&rdquo;</p></blockquote>
+      <figcaption class="pull-quote__author">{{ c.quote.author | e }}, {{ c.quote.role | e }}</figcaption>
+    </figure>
+  </div>
+</section>
+{%- endif %}
+
+<nav class="section section--sm case-nav" aria-label="{{ ui.case_all | e }}">
+  <div class="container case-nav__inner">
+    <a class="case-nav__all text-link" href="{{ url('work') }}"><span aria-hidden="true">&larr;</span> {{ ui.case_all | e }}</a>
+    <div class="case-nav__pair">
+{%- if prev %}
+      <a class="case-nav__link" href="{{ url('case-' ~ prev.id) }}" rel="prev"><span class="case-nav__label">{{ ui.case_prev | e }}</span>{{ prev.name | e }}</a>
+{%- endif %}
+{%- if next %}
+      <a class="case-nav__link case-nav__link--next" href="{{ url('case-' ~ next.id) }}" rel="next"><span class="case-nav__label">{{ ui.case_next | e }}</span>{{ next.name | e }}</a>
+{%- endif %}
+    </div>
+  </div>
+</nav>
+
+{{ cta(feature=not c.quote is defined) }}
+{% endblock %}

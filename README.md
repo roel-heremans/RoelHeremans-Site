@@ -14,7 +14,7 @@ Design and decisions: `docs/superpowers/specs/2026-10-31-roel-heremans-site-desi
     python -m http.server -d output 8000               # http://localhost:8000/
 
 ## Page structure
-Five pages, each at `/<slug>/`:
+Five main pages, each at `/<slug>/`:
 
 | Page | URL | Template |
 |---|---|---|
@@ -24,7 +24,9 @@ Five pages, each at `/<slug>/`:
 | About | `/about/` | `about.html.j2` |
 | Contact | `/contact/` | `contact.html.j2` |
 
-Old Framer URLs still work through small redirect pages (`CONTENT["redirects"]`): `/project/bef4U`, `/project/Electrolux`, `/project/uptime`, `/project/PoliticalMonitor`, `/project/fbeta` and `/project/sniffers` go to the matching card on Work; `/de/` goes to Home (the German version was dropped). The CV is copied from `original/roel-heremans-cv.pdf` to `/cv/roel-heremans-cv.pdf`.
+Each earlier project also has a case-study page at `/work/<id>/` (SpryFox, Bef4U, Electrolux, Uptime, Your Political Monitor, fbeta, Intero – The Sniffers), all rendered by the one template `case-study.html.j2`. The projects are one list, `PROJECTS` at the top of `src/content.py`: it drives both the cards on Work and the case pages (added to `CONTENT["pages"]` at the bottom of the file, so they get the sitemap, titles and relative links like any page). To add a project, add an entry there. Facts come only from `docs/superpowers/specs/2026-10-31-case-study-pages.md`; copy numbers exactly.
+
+Old Framer URLs still work through small redirect pages (`CONTENT["redirects"]`): `/project/bef4U`, `/project/Electrolux`, `/project/uptime`, `/project/PoliticalMonitor`, `/project/fbeta` and `/project/sniffers` go to the matching case-study page (the card anchors on Work stay too); `/de/` goes to Home (the German version was dropped). The CV is copied from `original/roel-heremans-cv.pdf` to `/cv/roel-heremans-cv.pdf`.
 
 Shared parts (header, footer, closing call to action, checklist) are in `src/templates/partials/`; styles in `assets/css/styles.css`; the only script of our own is `assets/js/site.js` (phone menu, copy-email button, fade-in).
 
@@ -54,7 +56,7 @@ Every colour is a CSS custom property in the one `:root` block at the top of `as
     ./build-output.sh && python tools/screenshots.py
     python tools/screenshots.py https://roel-heremans.github.io/RoelHeremans-Site/
 
-Screenshots all five pages at 1440px and 390px into `review/shots/`, writes a gallery `review/index.html` (`review/` is gitignored), checks every 390px page for horizontal scroll and the header at 960, 1100 and 1260px (the nav must stay on one row). Exits 1 and lists the problems if a check fails. Without a URL it serves `output/` itself (with the CORS header the web fonts need). Needs google-chrome and ImageMagick.
+Screenshots every page (the five main pages and the case studies) at 1440px and 390px into `review/shots/`, writes a gallery `review/index.html` (`review/` is gitignored), checks every 390px page for horizontal scroll and the header at 960, 1100 and 1260px (the nav must stay on one row). Exits 1 and lists the problems if a check fails. Without a URL it serves `output/` itself (with the CORS header the web fonts need). Needs google-chrome and ImageMagick.
 
 ## Deploy (phase 1: GitHub Pages test site)
 Pushing to `main` runs `.github/workflows/deploy.yml`: install, `pytest -q` (failing tests block the deploy), build, publish `output/` to

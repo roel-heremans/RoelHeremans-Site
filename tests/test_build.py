@@ -5,6 +5,8 @@ from content import CONTENT
 from paths import page_path, rel
 
 PATHS = ["", "approach/", "work/", "about/", "contact/"]
+# One case-study page per earlier project, after the five main pages.
+CASE_PATHS = [f"work/{p['id']}/" for p in CONTENT["work"]["earlier"]["items"]]
 PAGES = {p["id"]: p for p in CONTENT["pages"]}
 NOINDEX = '<meta name="robots" content="noindex">'
 BASE = "https://www.roel-heremans.com/"
@@ -27,10 +29,11 @@ def _resolve(page_file, href):
     return target / "index.html" if target.is_dir() else target
 
 
-def test_five_pages(built):
-    for p in PATHS:
+def test_five_pages_and_case_studies(built):
+    assert len(CASE_PATHS) == 7
+    for p in PATHS + CASE_PATHS:
         assert (built / p / "index.html").is_file(), p
-    assert sorted(page_files(built)) == sorted(built / p / "index.html" for p in PATHS)
+    assert sorted(page_files(built)) == sorted(built / p / "index.html" for p in PATHS + CASE_PATHS)
 
 
 def test_rel_keeps_anchor_and_trailing_slash():
@@ -138,19 +141,20 @@ def test_default_env_keeps_preview():
     assert content_for_env({"SITE_ENV": "staging"})["preview"] is True
 
 
-def test_sitemap_lists_the_five_pages(built):
+def test_sitemap_lists_every_page(built):
+    """The five main pages and every case-study page."""
     locs = re.findall(r"<loc>([^<]+)</loc>", (built / "sitemap.xml").read_text())
-    assert sorted(locs) == sorted(PREVIEW_BASE + p for p in PATHS)
+    assert sorted(locs) == sorted(PREVIEW_BASE + p for p in PATHS + CASE_PATHS)
 
 
-# Old Framer URL -> new output path + anchor.
+# Old Framer URL -> new output path (+ anchor). The /project/* pages go to their case study.
 OLD_URLS = {
-    "project/Electrolux": "work/#electrolux",
-    "project/PoliticalMonitor": "work/#political-monitor",
-    "project/bef4U": "work/#bef4u",
-    "project/fbeta": "work/#fbeta",
-    "project/sniffers": "work/#sniffers",
-    "project/uptime": "work/#uptime",
+    "project/Electrolux": "work/electrolux/",
+    "project/PoliticalMonitor": "work/political-monitor/",
+    "project/bef4U": "work/bef4u/",
+    "project/fbeta": "work/fbeta/",
+    "project/sniffers": "work/sniffers/",
+    "project/uptime": "work/uptime/",
     "de": "",
 }
 

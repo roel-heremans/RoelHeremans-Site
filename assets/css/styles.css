@@ -480,8 +480,41 @@ main { display: block; }
 }
 .pipeline li:last-child { margin-right: 0; }
 .pipeline .pipeline__trigger { background: var(--accent); border-color: var(--accent); font-weight: 600; }
-.project { padding: 40px 36px; }
+.project { padding: 40px 36px; position: relative; display: flex; flex-direction: column; transition: background .2s; }
 .project:target { outline: 2px solid var(--accent); outline-offset: -2px; }
+/* The whole card is clickable through its one real link (stretched over the card). */
+.project__link {
+  margin-top: auto; padding-top: 24px; text-decoration: none;
+  font-size: 11px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-text);
+}
+.project__link::after { content: ""; position: absolute; inset: 0; }
+.project:hover { background: var(--bg); }
+.project:hover .project__link { color: var(--text); }
+.project:focus-within { outline: 2px solid var(--brand); outline-offset: -2px; }
+.project__link:focus-visible { outline: none; }
+/* A wide card spans the whole row, so 1 + 6 cards fill the 3-column grid without an orphan. */
+.project--wide { grid-column: 1 / -1; }
+.project--wide .body { max-width: 760px; }
+/* Case-study pages (case-study.html.j2): key results in the facts panel, previous/next nav. */
+.case-hero .chips { margin-bottom: 32px; }
+.case-hero .lead { text-wrap: pretty; }
+.key-results li { position: relative; padding: 4px 0 4px 18px; }
+.key-results li::before {
+  content: ""; position: absolute; left: 0; top: 16px; width: 7px; height: 1px; background: var(--accent);
+}
+.case-nav__inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px 48px; }
+.case-nav__all { font-size: 15px; }
+.case-nav__pair { display: flex; flex-wrap: wrap; gap: 16px 48px; }
+.case-nav__link {
+  display: flex; flex-direction: column; gap: 4px; text-decoration: none;
+  font-family: var(--serif); font-size: 22px; line-height: 1.25; color: var(--text);
+}
+.case-nav__link--next { text-align: right; }
+.case-nav__link:hover { color: var(--brand); }
+.case-nav__label {
+  font-family: var(--sans); font-size: 11px; font-weight: 500; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--accent-text);
+}
 
 /* ── ABOUT ── */
 .about-hero .hero__media img { object-position: 50% 30%; }
@@ -495,7 +528,7 @@ main { display: block; }
   color: var(--accent-text); padding-top: 8px;
 }
 .timeline .body { max-width: 680px; }
-.about-testimonial .pull-quote p { font-size: clamp(24px, 2.6vw, 36px); line-height: 1.45; }
+:is(.about-testimonial, .case-quote) .pull-quote p { font-size: clamp(24px, 2.6vw, 36px); line-height: 1.45; }
 .pull-quote__author {
   margin-top: 32px; text-align: center;
   font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent);
@@ -538,6 +571,7 @@ main { display: block; }
   .btc-note { flex-direction: column; gap: 20px; padding: 32px 24px; }
   .btc-card { padding: 36px 24px; }
   .service, .project { padding: 32px 24px; }
+  .case-nav__pair { width: 100%; justify-content: space-between; }
   .timeline__item { grid-template-columns: 1fr; gap: 8px; padding: 28px 0; }
   .timeline__where { padding-top: 0; }
   .vlog { font-size: 12px; }

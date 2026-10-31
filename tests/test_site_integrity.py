@@ -49,4 +49,4 @@ def test_no_root_absolute_urls(built):
 
 
 def test_scan_covers_pages_and_redirects(built):
-    assert len(_files(built, {".html"})) == 5 + 7
+    assert len(_files(built, {".html"})) == 5 + 7 + 7  # pages, case studies, redirects

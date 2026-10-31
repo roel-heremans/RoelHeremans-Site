@@ -3,6 +3,289 @@
 # English only: every visible value is a plain string. "{email}" in a text can be turned
 # into a mailto link with the `with_email` helper (partials/helpers.html.j2).
 
+# ── Earlier projects ──
+# One entry per project. The same data drives the card on /work/ (meta, name, text) and the
+# case-study page at /work/<id>/ (everything else; template case-study.html.j2, one page per
+# entry, added to CONTENT["pages"] at the bottom of this file). Order = card order = the
+# previous/next links on the case pages. `id` is also the card's anchor on /work/.
+# Facts come only from docs/superpowers/specs/2026-10-31-case-study-pages.md: copy numbers
+# exactly. `wide`: the card spans the whole grid row (keeps the 3-column grid balanced).
+# `engagement`, `period`, `key_results` and `quote` are optional.
+PROJECTS = [
+    {
+        "id": "spryfox",
+        "name": "SpryFox",
+        "wide": True,
+        "meta": "Insurance · text classification",
+        "text": "Sorted free-text veterinary invoice lines into insurance coverage codes, with a "
+                "confidence score that sends uncertain lines to a human. 84% of predictions correct.",
+        "industry": "Insurance analytics",
+        "engagement": "Direct client",
+        "lede": "Reading veterinary invoices line by line, with a model that says how sure it is.",
+        "description": "SpryFox case study: veterinary invoice lines classified into pet insurance "
+                       "coverage codes with biomedical embeddings and calibrated confidence. "
+                       "84% of predictions correct.",
+        "challenge": [
+            "Each line on a veterinary invoice is free text, such as \"Canine Junior Bloodwork "
+            "Profile\" or \"Leptospirosis Vaccine - 1 year\". For pet insurance claims, every line "
+            "needs a coverage code and a type: wellness, illness or accident.",
+        ],
+        "did": [
+            "I turned the invoice lines into biomedical sentence embeddings with BioLORD-2023-C, "
+            "which I compared with BioBERT and all-MiniLM-L6-v2. I reduced them to 256 dimensions "
+            "with UMAP and trained PyTorch MLP and LightGBM classifiers.",
+            "I calibrated the predicted probabilities and built precision-targeted variants, one "
+            "tuned for 75% precision, so the model can say how sure it is. A confidence-breakpoint "
+            "analysis decides which lines are automated and which go to a human.",
+            "I tracked the experiments in Neptune.ai and also tested LLM prompting with DSPy.",
+        ],
+        "results": [
+            "The model scored about 604,000 invoice lines, and 84% of its predictions were correct. "
+            "The average confidence is 0.91 on correct predictions versus 0.50 on wrong ones. That "
+            "gap makes a clean threshold for routing uncertain lines to a human reviewer.",
+        ],
+        "client": "Insurance analytics (pet insurance claims)",
+        "period": "Oct 2024 to May 2025",
+        "question": "Which coverage code does each line on a veterinary invoice belong to, and is "
+                    "it wellness, illness or accident?",
+        "stack": "Python, PyTorch, LightGBM, sentence-transformers, UMAP, Neptune.ai, DSPy, Poetry",
+        "methods": "Text embeddings, dimensionality reduction, multi-class classification, "
+                   "probability calibration, precision/recall threshold tuning",
+        "key_results": [
+            "About 604,000 invoice lines scored",
+            "84% of predictions correct",
+            "Average confidence 0.91 on correct predictions versus 0.50 on wrong ones",
+        ],
+    },
+    {
+        "id": "bef4u",
+        "name": "Bef4U",
+        "meta": "Energy · anomaly detection",
+        "text": "Online anomaly detection on electricity use in shopping malls: a "
+                "sliding-window XGBoost model with z-score alerts.",
+        "industry": "Energy efficiency",
+        "engagement": "via Proxify",
+        "lede": "Flagging abnormal electricity consumption in two shopping malls as the readings "
+                "arrive.",
+        "description": "Bef4U case study: online anomaly detection on the electricity consumption "
+                       "of two shopping malls with a sliding-window XGBoost model and residual "
+                       "z-scores.",
+        "challenge": [
+            "Bef4U needed to detect abnormal electricity consumption in two shopping malls.",
+        ],
+        "did": [
+            "I used an online approach with a sliding training window and testing window, "
+            "predicting the next sample outside both windows.",
+            "At each step an XGBoost model is trained on the training window, and a z-score on the "
+            "residual flags the anomalies.",
+        ],
+        "results": [
+            "An online detector that compares each new reading with the model's prediction and "
+            "flags the abnormal ones as they arrive.",
+        ],
+        "client": "Sombreffe, Belgium · founded 2018 · environmental services (energy efficiency) "
+                  "· 10+ employees",
+        "question": "Which consumption readings are abnormal, as they arrive?",
+        "stack": "Python, XGBoost",
+        "methods": "Sliding-window online learning, residual z-score anomaly detection",
+    },
+    {
+        "id": "electrolux",
+        "name": "Electrolux",
+        "meta": "Appliances · forecasting",
+        "text": "Forecast service call ratios during the warranty period with Markov Random "
+                "Fields. 4.2% MAPE for food preservation.",
+        "industry": "Household appliances",
+        "engagement": "via Proxify",
+        "lede": "Forecasting next month's warranty service calls for every product group.",
+        "description": "Electrolux case study: forecasting warranty service calls with Markov Random "
+                       "Fields regression. 4.2% MAPE for food preservation, below 14% across all "
+                       "product hierarchies.",
+        "challenge": [
+            "During the warranty period, typically one year, Electrolux sends technicians to "
+            "customers' homes. The task was to forecast the volume of these service calls from "
+            "historical data.",
+        ],
+        "did": [
+            "I built a regression model based on Markov Random Fields, trained on one year of data, "
+            "that predicts next month's service calls. The target is the Service Call Ratio (SCR): "
+            "service calls normalised by the number of items sold.",
+            "An uncertainty band reflects the uncertainty of the sales-volume estimate. I showed the "
+            "results across all product hierarchies (product line, group and subgroup) in an "
+            "interactive sunburst chart.",
+        ],
+        "results": [
+            "For the food preservation category (mean sales volume 176,735 items per month), the "
+            "Mean Absolute Percentage Error on the SCR is 4.2%. Across all product hierarchies the "
+            "MAPE stays below 14%.",
+        ],
+        "client": "Stockholm, Sweden · founded 1918 · household appliances · 45,000+ employees",
+        "question": "How many warranty service calls should we expect next month, per product "
+                    "group?",
+        "stack": "Python",
+        "methods": "Markov Random Fields regression, MAPE evaluation, uncertainty bands",
+        "key_results": [
+            "4.2% MAPE on the SCR for food preservation (mean sales volume 176,735 items per month)",
+            "Below 14% MAPE across all product hierarchies",
+        ],
+    },
+    {
+        "id": "uptime",
+        "name": "Magenta Insight / Uptime",
+        "meta": "Water · sensors",
+        "text": "Detected when rural well pumps were used from temperature sensors, with a "
+                "tuning dashboard and a batch engine.",
+        "industry": "Rural water",
+        "engagement": "via Proxify",
+        "lede": "Reading hand-pump use from the temperature sensor on a well.",
+        "description": "Magenta Insight / Uptime case study: detecting when, how often and how long "
+                       "rural hand pumps were used, from well temperature sensors.",
+        "challenge": [
+            "When people pump water, it flows over a temperature sensor on the well. If ambient and "
+            "groundwater temperatures differ, this causes a sudden temperature change.",
+            "The sensors are read out every few months, so the analysis is offline.",
+        ],
+        "did": [
+            "I built two detection methods. The first extracts local extrema with the slope "
+            "profile. The second decomposes the signal into trend, seasonality and residual; the "
+            "residual identifies pump use.",
+            "I also built a Dash dashboard for quick visualisation and parameter tuning, and a batch "
+            "engine that processes many sensor files at once.",
+        ],
+        "results": [
+            "A report per pump with the number of pump uses, the longest and shortest use, and the "
+            "start and stop times of each use.",
+            "Both methods agree well with ground truth where ambient and water temperatures differ. "
+            "When they become similar, detection from temperature alone is not possible, and the "
+            "dashboard shows this.",
+        ],
+        "client": "Oxford, United Kingdom · founded 2019 · rural water maintenance services",
+        "question": "When, how often and how long was each hand pump used?",
+        "stack": "Python, Dash",
+        "methods": "Time-series decomposition, extrema and slope analysis, batch processing",
+        "quote": {
+            "text": "Roel was great. He seamlessly fit into our team and exceeded expectations "
+                    "almost immediately. He's built exactly what we need quickly and effectively.",
+            "author": "Duncan McNicholl",
+            "role": "Co-founder & CEO, Uptime Global",
+        },
+    },
+    {
+        "id": "political-monitor",
+        "name": "Your Political Monitor",
+        "meta": "Politics · LLM",
+        "text": "A web app that summarises political documents and PDFs with an open LLM, "
+                "using LangChain map-reduce for long texts.",
+        "industry": "Political information",
+        "engagement": "via Proxify",
+        "lede": "Summarising political documents at ChatGPT-level quality, without ChatGPT.",
+        "description": "Your Political Monitor case study: a demo web app that summarises political "
+                       "documents and PDFs with an open LLM and LangChain map-reduce.",
+        "challenge": [
+            "Polpo wanted a web-app demo where clients paste text or upload a PDF and get a "
+            "summary, at ChatGPT-level quality and speed but without using ChatGPT.",
+        ],
+        "did": [
+            "I researched which pretrained open LLM to use. Then I analysed LangChain's Map-Reduce "
+            "and Refine strategies, so long documents can be summarised too.",
+            "I built the demo web app. It shows the summary, the number of words generated and the "
+            "time taken.",
+        ],
+        "results": [
+            "A working demo that summarises pasted text and uploaded PDFs, long documents included, "
+            "with an open LLM instead of ChatGPT.",
+        ],
+        "client": "Polpo · Amsterdam, Netherlands · founded 2017 · political information "
+                  "· 15+ employees",
+        "question": "Can we summarise political documents well without ChatGPT?",
+        "stack": "Python, LangChain, open-source LLM",
+        "methods": "LLM selection, map-reduce and refine summarisation",
+        "quote": {
+            "text": "We are very happy with the work Roel has delivered. He communicates well, does "
+                    "not shy away from challenges, and has a real problem-solving mindset! A great "
+                    "addition to any team!",
+            "author": "Caspar Pille",
+            "role": "Co-founder & CEO, Polpo",
+        },
+    },
+    {
+        "id": "fbeta",
+        "name": "fbeta",
+        "meta": "Consulting · LLM",
+        "text": "Scored how well LLM answers agree with expert answers on 50+ benchmark questions, "
+                "to pick the best model.",
+        "industry": "Business consulting",
+        "lede": "Finding the LLM whose answers come closest to the experts.",
+        "description": "fbeta case study: scoring LLM answers against subject-matter experts with "
+                       "BERT similarity and ranking the models with Kendall tau.",
+        "challenge": [
+            "fbeta needed to score how well machine-generated answers agree with the answers of "
+            "subject-matter experts, to pick the LLM that gives the best answers on a set of 50+ "
+            "benchmark questions.",
+        ],
+        "did": [
+            "I compared evaluation techniques. BERT sentence similarity and BERT embedding "
+            "similarity were the two most promising.",
+            "I used Kendall tau to rank which LLM agreed best with the experts.",
+        ],
+        "results": [
+            "A ranking of the LLMs by how well their answers agree with the experts, which shows "
+            "which model to pick.",
+        ],
+        "client": "Berlin, Germany · founded 2014 · business consulting and services "
+                  "· 30–50 employees",
+        "question": "Which LLM answers most like our experts?",
+        "stack": "Python, BERT",
+        "methods": "Semantic similarity scoring, rank correlation (Kendall tau), LLM benchmarking",
+    },
+    {
+        "id": "sniffers",
+        "name": "Intero – The Sniffers",
+        "meta": "Energy · computer vision",
+        "text": "Improved the deep learning models that detect and read text in piping diagrams "
+                "(P&IDs). True positives up between +18.47% and +162.74%.",
+        "industry": "Energy, oil & gas",
+        "lede": "Reading symbols and text in piping diagrams with deep learning.",
+        "description": "Intero – The Sniffers case study: Faster R-CNN text detection and fine-tuned "
+                       "TrOCR for P&ID diagrams. True positives up between +18.47% and +162.74%.",
+        "challenge": [
+            "The task was to improve the deep learning models that detect and read symbols and "
+            "text in Piping and Instrumentation Diagrams (P&IDs).",
+        ],
+        "did": [
+            "I optimised a Faster R-CNN with a ResNet-50 backbone for text detection in complex "
+            "P&IDs.",
+            "For text recognition I fine-tuned Microsoft's TrOCR (Transformer OCR) on "
+            "domain-specific P&ID text.",
+        ],
+        "results": [
+            "After retraining, true positives went up between +18.47% and +162.74% across models, "
+            "and false positives went down between −5.11% and −45.13%.",
+            "False negatives went down sharply in three cases, by −100% for the Brunei LNG model. "
+            "The mean character error rate went down by up to 46.23%.",
+        ],
+        "client": "Balen, Belgium · founded 1991 · energy, oil & gas · 150–200 employees",
+        "question": "Can we read P&ID diagrams automatically and accurately?",
+        "stack": "Python, Faster R-CNN (ResNet-50), TrOCR",
+        "methods": "Object detection, OCR fine-tuning, error analysis (TP/FP/FN, character error "
+                   "rate)",
+        "key_results": [
+            "True positives up between +18.47% and +162.74% across models",
+            "False positives down between −5.11% and −45.13%",
+            "False negatives down sharply in three cases, by −100% for the Brunei LNG model",
+            "Mean character error rate down by up to 46.23%",
+        ],
+        "quote": {
+            "text": "Roel consistently excelled in completing the tasks assigned to him. He "
+                    "demonstrated a high degree of independence in his work, consistently "
+                    "delivering on time while maintaining excellent communication throughout the "
+                    "process. I am very satisfied with his entire work ethic.",
+            "author": "Kris Huybs",
+            "role": "ICT Director, Intero – The Sniffers",
+        },
+    },
+]
+
 CONTENT = {
     # True = GitHub Pages test site: every page gets <meta name="robots" content="noindex">.
     # SITE_ENV=production (see build.py) turns it off.
@@ -80,15 +363,15 @@ CONTENT = {
             "in_nav": True,
         },
     ],
-    # Old Framer paths (at the site root) -> a page of the new site, optionally with an
-    # #anchor ({"page": id, "anchor": "id-on-that-page"}). Each becomes a small redirect page.
+    # Old Framer paths (at the site root) -> a page of the new site (the /project/* ones go to
+    # their case-study page), optionally with an #anchor ({"page": id, "anchor": "id-on-that-page"}). Each becomes a small redirect page.
     "redirects": {
-        "project/Electrolux": {"page": "work", "anchor": "electrolux"},
-        "project/PoliticalMonitor": {"page": "work", "anchor": "political-monitor"},
-        "project/bef4U": {"page": "work", "anchor": "bef4u"},
-        "project/fbeta": {"page": "work", "anchor": "fbeta"},
-        "project/sniffers": {"page": "work", "anchor": "sniffers"},
-        "project/uptime": {"page": "work", "anchor": "uptime"},
+        "project/Electrolux": {"page": "case-electrolux"},
+        "project/PoliticalMonitor": {"page": "case-political-monitor"},
+        "project/bef4U": {"page": "case-bef4u"},
+        "project/fbeta": {"page": "case-fbeta"},
+        "project/sniffers": {"page": "case-sniffers"},
+        "project/uptime": {"page": "case-uptime"},
         "de": {"page": "home"},
     },
     "links": {
@@ -106,6 +389,21 @@ CONTENT = {
         "cta": "Start a project",
         "step": "Step",
         "redirect_text": "This page has moved:",
+        # Case-study pages and the cards on /work/.
+        "case_link": "Read the case study",
+        "case_challenge": "The challenge",
+        "case_did": "What I did",
+        "case_results": "Results",
+        "case_client": "Client",
+        "case_period": "Period",
+        "case_question": "Question answered",
+        "case_stack": "Stack",
+        "case_methods": "Methods",
+        "case_key_results": "Key results",
+        "case_quote": "In the client's words",
+        "case_all": "All work",
+        "case_prev": "Previous",
+        "case_next": "Next",
     },
     "footer_tagline": "AI-accelerated, human-verified analytics.",
     "footer_location": "Madeira, Portugal",
@@ -339,26 +637,8 @@ CONTENT = {
         "earlier": {
             "eyebrow": "Before that",
             "heading": "Earlier projects",
-            # `id` is the anchor the old Framer /project/* URLs redirect to.
-            "items": [
-                {"id": "bef4u", "meta": "Energy · anomaly detection", "name": "Bef4U",
-                 "text": "Online anomaly detection on electricity use in shopping malls: a "
-                         "sliding-window XGBoost model with z-score alerts."},
-                {"id": "electrolux", "meta": "Appliances · forecasting", "name": "Electrolux",
-                 "text": "Forecast service call ratios during the warranty period with Markov Random "
-                         "Fields. 4.2% MAPE for food preservation."},
-                {"id": "uptime", "meta": "Water · sensors", "name": "Magenta Insight / Uptime",
-                 "text": "Detected when rural well pumps were used from temperature sensors, with a "
-                         "tuning dashboard and a batch engine."},
-                {"id": "political-monitor", "meta": "Politics · LLM", "name": "Your Political Monitor",
-                 "text": "A web app that summarises political documents and PDFs with an open LLM, "
-                         "using LangChain map-reduce for long texts."},
-                {"id": "fbeta", "meta": "Healthcare · LLM", "name": "fbeta",
-                 "text": "Expert knowledge combined with large language models for a healthcare "
-                         "innovation consultancy."},
-                {"id": "sniffers", "meta": "Energy · pipelines", "name": "Intero – The Sniffers",
-                 "text": "Analytics for field emission measurements and pipeline integrity surveys."},
-            ],
+            # Cards and case pages read the same list (PROJECTS, top of this file).
+            "items": PROJECTS,
         },
     },
 
@@ -438,3 +718,20 @@ CONTENT = {
     # Served at output/cv/ (build.py copies original/roel-heremans-cv.pdf there).
     "cv_path": "cv/roel-heremans-cv.pdf",
 }
+
+# One case-study page per project, at /work/<id>/ (after the five main pages, not in the nav).
+CONTENT["pages"] += [
+    {
+        "id": f"case-{p['id']}",
+        "template": "case-study.html.j2",
+        "slug": f"work/{p['id']}",
+        "title": p["name"],
+        "full_title": f"{p['name']} · {CONTENT['site_name']}",
+        "heading": p["name"],
+        "description": p["description"],
+        "nav": p["name"],
+        "in_nav": False,
+        "project": p["id"],
+    }
+    for p in PROJECTS
+]

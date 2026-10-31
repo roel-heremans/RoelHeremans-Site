@@ -62,11 +62,10 @@ def test_every_page_renders_its_key_headings(built):
 
 
 def test_redirect_anchors_exist_on_target_page(built):
-    """Every old /project/* URL lands on an element that exists."""
-    anchored = {old: t for old, t in CONTENT["redirects"].items() if "anchor" in t}
-    assert len(anchored) == 6
-    for old, target in anchored.items():
-        assert target["anchor"] in ids(html_of(built, target["page"])), old
+    """Anchored redirects land on an element that exists; the old card anchors stay on /work/."""
+    for old, target in CONTENT["redirects"].items():
+        if "anchor" in target:
+            assert target["anchor"] in ids(html_of(built, target["page"])), old
     work = html_of(built, "work")
     for anchor in ("bef4u", "electrolux", "uptime", "political-monitor", "fbeta", "sniffers"):
         assert re.search(rf'\bid="{anchor}"', work), anchor
@@ -220,6 +219,10 @@ class _DraftText(HTMLParser):
 
 # Draft texts deliberately changed when moving into the site (with the reason).
 DRAFT_EXCEPTIONS = {
+    # fbeta and Intero cards: the draft text did not match the facts in the case-study spec
+    # (docs/superpowers/specs/2026-10-31-case-study-pages.md), so the cards now follow the spec.
+    "Expert knowledge combined with large language models for a healthcare innovation consultancy.",
+    "Analytics for field emission measurements and pipeline integrity surveys.",
     # h1: "months" is struck through (<s>), so it reads differently; checked in test_build
     # and test_home_hero_strike_and_log.
     "Your analytics question, answered in months days . Every number checked by hand.",

@@ -59,10 +59,11 @@
     </div>
     <div class="grid grid--3 earlier-grid">
 {%- for item in w.earlier['items'] %}
-      <article class="card project" id="{{ item.id }}" data-reveal>
-        <p class="card__eyebrow">{{ item.meta | e }}</p>
+      <article class="card project{% if item.wide is defined and item.wide %} project--wide{% endif %}" id="{{ item.id }}" data-reveal>
+        <p class="card__eyebrow">{{ item.meta | e }}{% if item.engagement is defined %} · {{ item.engagement | e }}{% endif %}</p>
         <h3 class="h-card">{{ item.name | e }}</h3>
         <p class="body">{{ item.text | e }}</p>
+        <a class="project__link" href="{{ url('case-' ~ item.id) }}">{{ content.ui.case_link | e }}<span class="visually-hidden">: {{ item.name | e }}</span> <span aria-hidden="true">&rarr;</span></a>
       </article>
 {%- endfor %}
     </div>
