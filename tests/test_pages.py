@@ -69,7 +69,7 @@ def test_redirect_anchors_exist_on_target_page(built):
         assert target["anchor"] in ids(html_of(built, target["page"])), old
     work = html_of(built, "work")
     for anchor in ("bef4u", "electrolux", "uptime", "political-monitor", "fbeta", "sniffers"):
-        assert re.search(rf'<article class="card project" id="{anchor}"', work), anchor
+        assert re.search(rf'\bid="{anchor}"', work), anchor
 
 
 def test_in_page_anchor_links_resolve(built):

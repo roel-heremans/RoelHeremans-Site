@@ -102,6 +102,7 @@ CONTENT = {
         "footer_nav": "Pages",
         "email": "Email",
         "cta": "Start a project",
+        "step": "Step",
         "redirect_text": "This page has moved:",
     },
     "footer_tagline": "AI-accelerated, human-verified analytics.",
@@ -212,9 +213,6 @@ CONTENT = {
         "method": {
             "eyebrow": "How I work",
             "heading": "AI does the heavy lifting. I do the checking.",
-            "lead": "An AI coding assistant can write in an afternoon what used to take a team a few "
-                    "weeks. It can also be confidently wrong. My job is to make sure it isn't, before "
-                    "anything reaches your board or your customers.",
             "button": "How I work, step by step",
         },
         "work": {
@@ -231,7 +229,7 @@ CONTENT = {
         "lead": "An AI coding assistant can write in an afternoon what used to take a team a few "
                 "weeks. It can also be confidently wrong. My job is to make sure it isn't, before "
                 "anything reaches your board or your customers.",
-        "steps": {"eyebrow": "The method", "heading": "Four steps", "step": "Step"},
+        "steps": {"eyebrow": "The method", "heading": "Four steps"},
         "compare": {
             "eyebrow": "Compared",
             "heading": "What changes for you",
@@ -418,8 +416,6 @@ CONTENT = {
     # ── Contact ──
     "contact": {
         "eyebrow": "Contact",
-        "lead": "Send a short email. I reply within two working days with whether I can help, a "
-                "rough plan and a fixed quote.",
         "email_label": "Email",
         "copy_label": "Copy",
         "copied": "Copied",

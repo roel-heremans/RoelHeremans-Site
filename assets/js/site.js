@@ -38,11 +38,9 @@
     var label = btn.textContent;
     var timer;
     var done = function (msg) {
-      btn.textContent = msg;
       if (status) status.textContent = msg;
       clearTimeout(timer);
       timer = setTimeout(function () {
-        btn.textContent = label;
         if (status) status.textContent = "";
       }, 1800);
     };
