@@ -1,4 +1,4 @@
-name: Deploy (GitHub Pages test site)
+name: Deploy (GitHub Pages test site + STRATO live site)
 on:
   push:
     branches: [main]
@@ -34,3 +34,25 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+  strato:
+    # Live site (roel-heremans.com). Off until the repo variable STRATO_DEPLOY is "true".
+    needs: build
+    if: vars.STRATO_DEPLOY == 'true'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: strato
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: SITE_ENV=production ./build-output.sh
+      - run: python tools/deploy_strato.py output
+        env:
+          STRATO_HOST: ${{ secrets.STRATO_HOST }}
+          STRATO_USER: ${{ secrets.STRATO_USER }}
+          STRATO_PASSWORD: ${{ secrets.STRATO_PASSWORD }}
+          STRATO_PORT: ${{ secrets.STRATO_PORT }}
+          STRATO_REMOTE_PATH: ${{ vars.STRATO_REMOTE_PATH }}

@@ -79,6 +79,14 @@ def build(out_dir: Path, content: dict) -> None:
         robots = "User-agent: *\nDisallow: /\n"
     else:
         robots = f"User-agent: *\nAllow: /\nSitemap: {base}sitemap.xml\n"
+        # Live site on STRATO (Apache): send http:// and the bare domain to https://www.
+        (out_dir / ".htaccess").write_text(
+            "RewriteEngine On\n"
+            "RewriteCond %{HTTPS} !=on [OR]\n"
+            "RewriteCond %{HTTP_HOST} !^www\\. [NC]\n"
+            f"RewriteRule ^(.*)$ {base}$1 [R=301,L]\n",
+            encoding="utf-8",
+        )
     (out_dir / "robots.txt").write_text(robots, encoding="utf-8")
 
     urls = "".join(f"  <url>\n    <loc>{base}{page_path(p)}</loc>\n  </url>\n"
