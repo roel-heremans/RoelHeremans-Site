@@ -1,9 +1,77 @@
 {% extends "base.html.j2" %}
+{% from "partials/blocks.html.j2" import hand_tested with context %}
+{% from "partials/cta.html.j2" import cta with context %}
 {% block content %}
-<section class="section">
-  <div class="container container--narrow">
+{%- set a = content.approach %}
+
+<section class="hero hero--plain">
+  <div class="container">
+    <p class="eyebrow">{{ a.eyebrow | e }}</p>
     <h1 class="display">{{ page.heading | e }}</h1>
-    <p class="lead">Content follows.</p>
+    <p class="lead">{{ a.lead | e }}</p>
   </div>
 </section>
+
+<section class="section section--feature approach-steps">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">{{ a.steps.eyebrow | e }}</p>
+      <h2 class="h-section">{{ a.steps.heading | e }}</h2>
+    </div>
+    <ol class="grid grid--4 step-grid">
+{%- for step in content.steps %}
+      <li class="step" data-reveal>
+        <p class="step__n">{{ a.steps.step | e }} {{ loop.index }}</p>
+        <h3 class="h-card">{{ step.name | e }}</h3>
+        <p class="step__who">{{ step.who | e }}</p>
+        <p class="body">{{ step.text | e }}</p>
+      </li>
+{%- endfor %}
+    </ol>
+  </div>
+</section>
+
+<section class="section approach-checks">
+  <div class="container split split--top">
+    <div data-reveal>
+      {{ hand_tested() }}
+    </div>
+    <div data-reveal>
+      <p class="eyebrow">{{ a.compare.eyebrow | e }}</p>
+      <h2 class="h-section">{{ a.compare.heading | e }}</h2>
+      <hr class="rule">
+      <div class="table-scroll" role="region" aria-label="{{ a.compare.heading | e }}" tabindex="0">
+        <table class="compare">
+          <thead><tr>
+{%- for col in a.compare.columns %}{% if col %}<th scope="col">{{ col | e }}</th>{% else %}<td></td>{% endif %}{% endfor -%}
+          </tr></thead>
+          <tbody>
+{%- for row in a.compare.rows %}
+            <tr><th scope="row">{{ row[0] | e }}</th><td>{{ row[1] | e }}</td><td class="compare__me">{{ row[2] | e }}</td></tr>
+{%- endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--alt approach-services">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">{{ a.services.eyebrow | e }}</p>
+      <h2 class="h-section">{{ a.services.heading | e }}</h2>
+    </div>
+    <div class="grid grid--3 services">
+{%- for s in a.services['items'] %}
+      <div class="card service" data-reveal>
+        <h3 class="h-card">{{ s.name | e }}</h3>
+        <p class="body">{{ s.text | e }}</p>
+      </div>
+{%- endfor %}
+    </div>
+  </div>
+</section>
+
+{{ cta(alt=false) }}
 {% endblock %}

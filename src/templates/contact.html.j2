@@ -1,9 +1,63 @@
 {% extends "base.html.j2" %}
+{% from "partials/helpers.html.j2" import mailto with context %}
 {% block content %}
-<section class="section">
-  <div class="container container--narrow">
+{%- set c = content.contact %}
+{%- set b = content.bitcoin %}
+
+<section class="hero hero--plain">
+  <div class="container">
+    <p class="eyebrow">{{ c.eyebrow | e }}</p>
     <h1 class="display">{{ page.heading | e }}</h1>
-    <p class="lead">Content follows.</p>
+    <p class="lead">{{ c.lead | e }}</p>
+  </div>
+</section>
+
+<section class="section contact-main">
+  <div class="container split split--top">
+    <dl class="facts reach" data-reveal>
+      <div class="facts__row facts__row--stack">
+        <dt>{{ c.email_label | e }}</dt>
+        <dd>
+          <div class="copyline">
+            <code class="copyline__email" id="contact-email">{{ content.links.email | e }}</code>
+            <button class="copy-btn" type="button" data-copy="contact-email" data-label-done="{{ c.copied | e }}" data-label-selected="{{ c.selected | e }}" hidden>{{ c.copy_label | e }}</button>
+            <span class="visually-hidden" role="status" data-copy-status></span>
+          </div>
+          <a class="text-link" href="{{ mailto(c.mail_subject) }}">{{ c.mail_app | e }}</a>
+        </dd>
+      </div>
+      <div class="facts__row facts__row--stack">
+        <dt>{{ c.linkedin_label | e }}</dt>
+        <dd><a class="text-link" href="{{ content.links.linkedin | e }}" target="_blank" rel="noopener">{{ c.linkedin_text | e }}</a></dd>
+      </div>
+      <div class="facts__row facts__row--stack">
+        <dt>{{ c.cv_label | e }}</dt>
+        <dd><a class="text-link" href="{{ root }}{{ content.cv_path }}">{{ c.cv_text | e }}</a></dd>
+      </div>
+      <div class="facts__row facts__row--stack">
+        <dt>{{ c.include_label | e }}</dt>
+        <dd>
+          <ol class="brief">
+{%- for item in c.include %}
+            <li>{{ item | e }}</li>
+{%- endfor %}
+          </ol>
+        </dd>
+      </div>
+    </dl>
+
+    <section class="btc-card" id="bitcoin" aria-labelledby="bitcoin-heading" data-reveal>
+      <span class="btc-glyph" aria-hidden="true">₿</span>
+      <p class="eyebrow">{{ b.eyebrow | e }}</p>
+      <h2 class="h-card" id="bitcoin-heading">{{ b.heading | e }}</h2>
+      <p class="body">{{ b.text | e }}</p>
+      <ul class="dash-list">
+{%- for item in b['items'] %}
+        <li>{{ item | e }}</li>
+{%- endfor %}
+      </ul>
+      <p class="btc-card__note">{{ b.note | e }}</p>
+    </section>
   </div>
 </section>
 {% endblock %}

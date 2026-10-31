@@ -1,9 +1,84 @@
 {% extends "base.html.j2" %}
+{% from "partials/helpers.html.j2" import img with context %}
+{% from "partials/cta.html.j2" import cta with context %}
 {% block content %}
-<section class="section">
-  <div class="container container--narrow">
+{%- set a = content.about %}
+
+<section class="hero hero--short about-hero">
+  <div class="hero__text">
+    <p class="eyebrow">{{ a.eyebrow | e }}</p>
     <h1 class="display">{{ page.heading | e }}</h1>
-    <p class="lead">Content follows.</p>
+    <p class="lead">{{ a.lead | e }}</p>
+    <div class="btn-row">
+      <a class="btn btn--outline" href="{{ root }}{{ content.cv_path }}">{{ a.cv | e }}</a>
+    </div>
+  </div>
+  <div class="hero__media">
+    {{ img(content.images.portrait_square, lazy=false, priority=true) }}
   </div>
 </section>
+
+<section class="section about-timeline">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">{{ a.timeline.eyebrow | e }}</p>
+      <h2 class="h-section">{{ a.timeline.heading | e }}</h2>
+    </div>
+    <ol class="timeline">
+{%- for item in a.timeline['items'] %}
+      <li class="timeline__item" data-reveal>
+        <p class="timeline__where">{{ item.where | e }}</p>
+        <div>
+          <h3 class="h-card">{{ item.role | e }}</h3>
+          <p class="body">{{ item.text | e }}</p>
+        </div>
+      </li>
+{%- endfor %}
+    </ol>
+  </div>
+</section>
+
+<section class="section section--feature about-testimonial">
+  <div class="container" data-reveal>
+{%- set t = a.testimonial %}
+    <p class="eyebrow center">{{ t.eyebrow | e }}</p>
+    <figure class="pull-quote">
+      <blockquote><p>&ldquo;{{ t.text | e }}&rdquo;</p></blockquote>
+      <figcaption class="pull-quote__author">{{ t.author | e }}</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="section section--alt about-certificates">
+  <div class="container container--narrow" data-reveal>
+{%- set c = a.certificates %}
+    <p class="eyebrow">{{ c.eyebrow | e }}</p>
+    <h2 class="h-section">{{ c.heading | e }}</h2>
+    <hr class="rule">
+    <ul class="dash-list">
+{%- for item in c['items'] %}
+      <li>{{ item | e }}</li>
+{%- endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section about-outside">
+{%- set o = a.outside %}
+  <div class="container split">
+    <div class="split__media" data-reveal>{{ img(content.images.family) }}</div>
+    <div data-reveal>
+      <p class="eyebrow">{{ o.eyebrow | e }}</p>
+      <h2 class="h-section">{{ o.heading | e }}</h2>
+      <hr class="rule">
+      <p class="lead">{{ o.text | e }}</p>
+      <figure class="outside-quote">
+        <blockquote><p class="tagline">&ldquo;{{ o.quote | e }}&rdquo;</p></blockquote>
+        <figcaption class="quote__author">{{ o.quote_author | e }}</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+{{ cta() }}
 {% endblock %}

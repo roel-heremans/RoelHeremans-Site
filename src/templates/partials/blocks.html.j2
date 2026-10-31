@@ -1,0 +1,15 @@
+{#- Shared page blocks. Import with context:
+      {% from "partials/blocks.html.j2" import hand_tested, step_label with context %} -#}
+
+{#- "What hand-tested means": heading + checklist with --ok ticks. -#}
+{% macro hand_tested(heading_tag="h2") -%}
+{%- set h = content.hand_tested %}
+<p class="eyebrow">{{ h.eyebrow | e }}</p>
+<{{ heading_tag }} class="h-section">{{ h.heading | e }}</{{ heading_tag }}>
+<hr class="rule">
+<ul class="tick-list">
+{%- for item in h['items'] %}
+  <li>{{ item | e }}</li>
+{%- endfor %}
+</ul>
+{%- endmacro %}

@@ -1,9 +1,73 @@
 {% extends "base.html.j2" %}
+{% from "partials/cta.html.j2" import cta with context %}
 {% block content %}
-<section class="section">
-  <div class="container container--narrow">
+{%- set w = content.work %}
+
+<section class="hero hero--plain">
+  <div class="container">
+    <p class="eyebrow">{{ w.eyebrow | e }}</p>
     <h1 class="display">{{ page.heading | e }}</h1>
-    <p class="lead">Content follows.</p>
   </div>
 </section>
+
+{%- for case in w.featured %}
+
+<section class="section{% if loop.index is odd %} section--surface{% else %} section--alt{% endif %} case" id="{{ case.id }}">
+  <div class="container case__grid">
+    <div data-reveal>
+      <ul class="chips">
+{%- for chip in case.chips %}
+        <li class="chip{% if loop.first and case.live %} chip--live{% endif %}">{{ chip | e }}</li>
+{%- endfor %}
+      </ul>
+      <h2 class="h-section">{{ case.name | e }}</h2>
+      <hr class="rule">
+      <div class="prose">
+{%- for para in case.paragraphs %}
+        <p>{{ para | e }}</p>
+{%- endfor %}
+      </div>
+    </div>
+    <aside class="case__aside" data-reveal>
+      <dl class="facts">
+{%- if case.pipeline is defined %}
+        <div class="facts__row facts__row--stack">
+          <dt>{{ case.pipeline.label | e }}</dt>
+          <dd>
+            <ol class="pipeline">
+{%- for step in case.pipeline.steps %}
+              <li{% if step == case.pipeline.trigger %} class="pipeline__trigger"{% endif %}>{{ step | e }}</li>
+{%- endfor %}
+            </ol>
+          </dd>
+        </div>
+{%- endif %}
+{%- for fact in case.facts %}
+        <div class="facts__row facts__row--stack"><dt>{{ fact.label | e }}</dt><dd>{{ fact.text | e }}</dd></div>
+{%- endfor %}
+      </dl>
+    </aside>
+  </div>
+</section>
+{%- endfor %}
+
+<section class="section earlier">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">{{ w.earlier.eyebrow | e }}</p>
+      <h2 class="h-section">{{ w.earlier.heading | e }}</h2>
+    </div>
+    <div class="grid grid--3 earlier-grid">
+{%- for item in w.earlier['items'] %}
+      <article class="card project" id="{{ item.id }}" data-reveal>
+        <p class="card__eyebrow">{{ item.meta | e }}</p>
+        <h3 class="h-card">{{ item.name | e }}</h3>
+        <p class="body">{{ item.text | e }}</p>
+      </article>
+{%- endfor %}
+    </div>
+  </div>
+</section>
+
+{{ cta(feature=true) }}
 {% endblock %}

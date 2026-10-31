@@ -10,6 +10,13 @@ NOINDEX = '<meta name="robots" content="noindex">'
 BASE = "https://www.roel-heremans.com/"
 
 
+def h1_text(html):
+    """Plain text of the <h1>, without struck-through (<s>) words and without tags."""
+    h1 = re.search(r"<h1[^>]*>(.*?)</h1>", html, re.S).group(1)
+    h1 = re.sub(r"<s\b.*?</s>", "", h1, flags=re.S)
+    return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", h1)).strip()
+
+
 def page_files(root):
     return [root / page_path(p) / "index.html" for p in CONTENT["pages"]]
 
@@ -37,7 +44,7 @@ def test_html_lang_and_single_h1(built):
         html = (built / page_path(page) / "index.html").read_text()
         assert '<html lang="en">' in html
         assert html.count("<h1") == 1, page["id"]
-        assert re.search(rf"<h1[^>]*>{re.escape(page['heading'])}</h1>", html), page["id"]
+        assert h1_text(html) == page["heading"], page["id"]
 
 
 def test_title_and_head_meta(built):

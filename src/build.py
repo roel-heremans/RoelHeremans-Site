@@ -1,5 +1,5 @@
 """
-Generate output/ (5 pages, redirects for old URLs, robots.txt, sitemap.xml).
+Generate output/ (5 pages, redirects for old URLs, robots.txt, sitemap.xml, the CV PDF).
 Edit src/content.py and run: python src/build.py (from project root)
 SITE_ENV=production builds the live site (indexable); anything else builds the noindex test site.
 """
@@ -89,6 +89,12 @@ def build(out_dir: Path, content: dict) -> None:
         f"{urls}</urlset>\n",
         encoding="utf-8",
     )
+
+    cv_src = ROOT / "original" / "roel-heremans-cv.pdf"
+    cv_out = out_dir / content["cv_path"]
+    cv_out.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(cv_src, cv_out)
+    print(f"  copied {content['cv_path']}")
 
     assets = ROOT / "assets"
     if assets.is_dir():

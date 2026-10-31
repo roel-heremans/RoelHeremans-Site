@@ -58,6 +58,8 @@
 
   --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
   --sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* System mono stack (verification log, email, pipeline): no extra webfont. */
+  --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
 
   --container: 1280px;
   --gutter: 48px;
@@ -345,6 +347,199 @@ main { display: block; }
 /* Ticks for "verified" items (the only use of --ok). */
 .tick-list li { position: relative; padding: 10px 0 10px 32px; font-size: 15px; font-weight: 300; color: var(--muted); }
 .tick-list li::before { content: "✓"; position: absolute; left: 0; top: 10px; font-weight: 600; color: var(--ok); }
+
+/* ── PAGES (Task 2) ── */
+/* Hidden visually, still read by screen readers (copy status). */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+/* Anchor targets clear the sticky header. */
+[id] { scroll-margin-top: 96px; }
+
+/* ── HOME: hero ── */
+.home-hero .display--hero { font-size: clamp(40px, 4.2vw, 62px); line-height: 1.08; }
+.home-hero .hero__media { min-height: 680px; }
+.home-hero .hero__media img { object-position: 38% 30%; }
+/* "months" struck through with a hand-drawn gold line, then "days" in gold italic.
+   The line draws in once; with reduced motion it is simply there. */
+.fix { white-space: nowrap; }
+.fix__old { position: relative; display: inline-block; text-decoration: none; color: var(--muted); }
+.fix__strike {
+  position: absolute; left: -6%; width: 112%; top: .36em; height: .32em;
+  overflow: visible; pointer-events: none;
+}
+.fix__strike path { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; }
+.fix__new { font-style: italic; color: var(--accent); }
+@media (prefers-reduced-motion: no-preference) {
+  .fix__strike path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: strike-draw .9s .6s cubic-bezier(.6, .1, .3, 1) forwards; }
+}
+@keyframes strike-draw { to { stroke-dashoffset: 0; } }
+
+/* Verification log: small mono panel over the hero photo, marked "example". */
+.vlog {
+  position: absolute; right: 32px; bottom: 32px; z-index: 1; width: min(400px, calc(100% - 64px));
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: 0 18px 40px var(--shadow);
+  font-family: var(--mono); font-size: 12.5px; line-height: 1.5; color: var(--text);
+}
+.vlog__head {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 10px 16px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 12px;
+}
+.vlog__marker {
+  font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-text);
+  border: 1px solid var(--accent); border-radius: 2px; padding: 1px 6px;
+}
+.vlog__lines { padding: 8px 16px; }
+.vlog__lines li { display: grid; grid-template-columns: 4.4em 1fr; gap: 10px; padding: 4px 0; }
+.vlog__tag { font-weight: 600; }
+.vlog__tag--claude { color: var(--brand); }
+.vlog__tag--roel { color: var(--ok); }
+.vlog__tag--flag { color: var(--accent-text); }
+.vlog__ok { color: var(--ok); font-weight: 600; }
+.vlog__foot { padding: 10px 16px; border-top: 1px solid var(--line); color: var(--muted); }
+.vlog__foot b { color: var(--ok); font-weight: 600; }
+
+/* Key facts: three big serif figures. */
+.key-fact { padding: 36px 32px; }
+.key-fact dt {
+  font-family: var(--serif); font-weight: 300; font-size: clamp(36px, 3.4vw, 48px); line-height: 1.1;
+  color: var(--text); font-variant-numeric: lining-nums;
+}
+.key-fact dd { margin-top: 8px; font-size: 14px; font-weight: 300; line-height: 1.6; color: var(--muted); }
+
+/* The four method steps (grid cells; on the feature band). */
+.step { padding: 36px 32px 40px; }
+.step__n {
+  font-size: 11px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--accent-text); margin-bottom: 16px;
+}
+.step__who { font-family: var(--serif); font-style: italic; font-size: 20px; line-height: 1.4; color: var(--accent-text); }
+.step .body { margin-top: 16px; }
+.section--feature .step__n, .section--feature .step__who { color: var(--accent); }
+
+/* Bitcoin: ₿ glyph in gold, card with an accent border (Home note, Contact section). */
+.btc-glyph {
+  display: block; font-family: var(--sans); font-weight: 500; font-size: 56px; line-height: 1;
+  color: var(--accent);
+}
+.btc-note, .btc-card {
+  background: var(--surface); border: 1px solid var(--accent); border-left-width: 3px;
+  border-radius: var(--radius);
+}
+.btc-note { display: flex; gap: 32px; align-items: flex-start; padding: 40px; }
+.btc-note .eyebrow, .btc-card .eyebrow { margin-bottom: 12px; }
+.btc-card { padding: 44px 40px; }
+.btc-card .btc-glyph { margin-bottom: 24px; }
+.btc-card .dash-list { margin-top: 24px; }
+.btc-card__note {
+  margin-top: 24px; font-family: var(--mono); font-size: 12px; letter-spacing: .04em; color: var(--accent-text);
+}
+
+/* ── APPROACH ── */
+/* Comparison table: scrolls sideways on phones instead of squeezing. */
+/* min-width: 0 lets a .split column shrink below the table width, so the table scrolls inside it. */
+.split > * { min-width: 0; }
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.compare { width: 100%; min-width: 520px; border-collapse: collapse; font-size: 15px; }
+.compare th, .compare td { padding: 14px 16px 14px 0; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+.compare thead th {
+  font-size: 11px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-text);
+}
+.compare tbody th { font-weight: 500; color: var(--text); white-space: nowrap; }
+.compare td { font-weight: 300; color: var(--muted); }
+.compare td.compare__me { font-weight: 500; color: var(--text); }
+.service { padding: 40px 36px; }
+
+/* ── WORK ── */
+.case__grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 80px; align-items: start; }
+.case__aside { position: sticky; top: 120px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+.chip {
+  font-size: 11px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted); border: 1px solid var(--line); border-radius: var(--radius); padding: 5px 12px;
+}
+.chip--live { color: var(--accent-text); border-color: var(--accent); }
+.chip--live::before {
+  content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 8px; vertical-align: 1px;
+  border-radius: 50%; background: var(--accent);
+}
+.facts__row--stack { grid-template-columns: 1fr; gap: 6px; }
+.pipeline { display: flex; flex-wrap: wrap; gap: 10px 0; margin-top: 6px; }
+.pipeline li {
+  position: relative; margin-right: 26px; padding: 5px 10px;
+  font-family: var(--mono); font-size: 12px; line-height: 1.4; color: var(--text);
+  background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius);
+}
+.pipeline li:not(:last-child)::after {
+  content: "→"; position: absolute; right: -20px; top: 50%; transform: translateY(-50%);
+  font-family: var(--sans); color: var(--muted);
+}
+.pipeline li:last-child { margin-right: 0; }
+.pipeline .pipeline__trigger { background: var(--accent); border-color: var(--accent); font-weight: 600; }
+.project { padding: 40px 36px; }
+.project:target { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+/* ── ABOUT ── */
+.about-hero .hero__media img { object-position: 50% 30%; }
+.timeline__item {
+  display: grid; grid-template-columns: 300px 1fr; gap: 48px;
+  padding: 36px 0; border-top: 1px solid var(--line);
+}
+.timeline__item:last-child { border-bottom: 1px solid var(--line); }
+.timeline__where {
+  font-size: 11px; font-weight: 500; letter-spacing: .16em; line-height: 1.7; text-transform: uppercase;
+  color: var(--accent-text); padding-top: 8px;
+}
+.timeline .body { max-width: 680px; }
+.about-testimonial .pull-quote p { font-size: clamp(24px, 2.6vw, 36px); line-height: 1.45; }
+.pull-quote__author {
+  margin-top: 32px; text-align: center;
+  font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent);
+}
+.outside-quote { margin-top: 36px; padding-left: 24px; border-left: 2px solid var(--accent); }
+.outside-quote .quote__author { margin-top: 12px; }
+
+/* ── CONTACT ── */
+.copyline { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; margin: 4px 0 12px; }
+.copyline__email {
+  font-family: var(--mono); font-size: 16px; color: var(--text); overflow-wrap: anywhere;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 8px 12px;
+}
+.copy-btn {
+  font-family: var(--sans); font-size: 11px; font-weight: 500; letter-spacing: .13em; text-transform: uppercase;
+  color: var(--text); background: none; border: 1px solid var(--text); border-radius: var(--radius);
+  padding: 10px 18px; cursor: pointer; transition: background .2s, color .2s;
+}
+.copy-btn:hover { background: var(--text); color: #fff; }
+.copy-btn[hidden] { display: none; }
+.reach .text-link { font-size: 15px; }
+.brief { counter-reset: brief; }
+.brief li { counter-increment: brief; position: relative; padding: 3px 0 3px 28px; }
+.brief li::before { content: counter(brief, lower-alpha) "."; position: absolute; left: 0; color: var(--accent-text); }
+
+@media (max-width: 1024px) {
+  .case__grid { grid-template-columns: 1fr; gap: 48px; }
+  .case__aside { position: static; }
+  .timeline__item { grid-template-columns: 220px 1fr; gap: 32px; }
+}
+@media (max-width: 959px) {
+  /* Phone/tablet: photo full width, the log card below it, overlapping a little. */
+  .home-hero .hero__media { aspect-ratio: auto; min-height: 0; padding-bottom: 56px; }
+  .home-hero .hero__media img { position: static; width: 100%; height: auto; aspect-ratio: 4 / 3; }
+  .vlog { position: relative; right: auto; bottom: auto; width: auto; max-width: 480px; margin: -48px var(--gutter) 0; }
+}
+@media (max-width: 768px) {
+  .key-fact { padding: 28px 24px; }
+  .step { padding: 28px 24px 32px; }
+  .btc-note { flex-direction: column; gap: 20px; padding: 32px 24px; }
+  .btc-card { padding: 36px 24px; }
+  .service, .project { padding: 32px 24px; }
+  .timeline__item { grid-template-columns: 1fr; gap: 8px; padding: 28px 0; }
+  .timeline__where { padding-top: 0; }
+  .vlog { font-size: 12px; }
+}
 
 /* ── FOOTER ── */
 .site-footer { background: var(--brand-deep) var(--grad-feature); color: var(--on-dark); padding: 80px 0 0; }

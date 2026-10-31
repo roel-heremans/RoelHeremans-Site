@@ -1,0 +1,14 @@
+{#- Closing call to action (CONTENT["cta"]). feature=true: the deep gradient band;
+    otherwise --bg-alt (alt=true) or --bg, to keep the sections alternating. -#}
+{% macro cta(feature=false, alt=true) -%}
+{%- set c = content.cta %}
+<section class="section{{ ' section--feature' if feature else (' section--alt' if alt else '') }} cta-band">
+  <div class="container container--narrow center" data-reveal>
+    <p class="eyebrow">{{ c.eyebrow | e }}</p>
+    <h2 class="h-section">{{ c.heading | e }}</h2>
+    <hr class="rule center">
+    <p class="lead">{{ c.text | e }}</p>
+    <div class="btn-row center"><a class="btn btn--accent" href="{{ url('contact') }}">{{ c.button | e }}</a></div>
+  </div>
+</section>
+{%- endmacro %}
