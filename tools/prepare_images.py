@@ -9,15 +9,16 @@ Uses ImageMagick `convert` via subprocess (argument lists, no shell). Every
 output path passes through safe_output(), which refuses anything outside
 assets/img/. JPEGs are stripped of metadata; PNGs carry no date/time chunks.
 
-og.jpg and favicon.png are drawn with TTF fonts. ImageMagick cannot read the
-site's self-hosted .woff2 files, so it uses EB Garamond (a close match for
-Cormorant Garamond) and Liberation Sans / DejaVu Sans (for Inter) when
-installed, and falls back to ImageMagick's default font otherwise.
+og.jpg and favicon.png use the site's real fonts. ImageMagick cannot read the
+self-hosted .woff2 files, so at run time they are converted to TTF in a temp
+dir and the variable fonts are instanced to a fixed weight (fontTools; install
+requirements-dev.txt). If a font cannot be prepared the script exits non-zero.
 """
 from __future__ import annotations
 
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -46,22 +47,27 @@ OG_PHOTO_W = 560
 
 BRAND = ("#14263A", "#1B3247", "#2B4A66")
 GOLD = "#C9A24A"
-SERIF_CANDIDATES = [
-    "/usr/share/fonts/truetype/ebgaramond/EBGaramond12-Bold.ttf",
-    "/usr/share/fonts/truetype/ebgaramond/EBGaramond12-Regular.ttf",
-    "/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf",
-]
-SANS_CANDIDATES = [
-    "/usr/share/fonts/truetype/liberation2/LiberationSans-Regular.ttf",
-    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
-]
+FONT_DIR = ROOT / "assets" / "fonts"
+SERIF_WEIGHT = 500  # Cormorant Garamond, top of the site range (300-500); thin cuts get faint on the dark OG card
+SANS_WEIGHT = 400  # Inter; 400 rather than the page's 300 so the small tagline stays legible on dark
 
 
-def _font(candidates: list[str]) -> list:
-    for c in candidates:
-        if Path(c).is_file():
-            return ["-font", c]
-    return []
+def prepare_font(woff2: str, weight: int, tmp: Path) -> str:
+    """Convert a variable woff2 from assets/fonts/ to a static TTF at `weight`; return its path."""
+    try:
+        from fontTools.ttLib import TTFont
+        from fontTools.varLib import instancer
+        src = FONT_DIR / woff2
+        font = TTFont(src)
+        if "fvar" in font:
+            font = instancer.instantiateVariableFont(font, {"wght": weight})
+        font.flavor = None
+        out = tmp / f"{src.stem}-{weight}.ttf"
+        font.save(out)
+        return str(out)
+    except Exception as exc:  # no silent fallback to other fonts
+        raise SystemExit(f"cannot prepare font {woff2} at weight {weight}: {exc!r}\n"
+                         "(install dev requirements: .venv/bin/pip install -r requirements-dev.txt)")
 
 
 # --- Helpers -------------------------------------------------------------------
@@ -100,7 +106,7 @@ def build_photo(src: str, target: str, max_edge: int, crop: str | None, gravity:
     return _convert([_src(src), *ops, *JPEG_OUT], OUT / target)
 
 
-def build_og() -> Path:
+def build_og(serif: str, sans: str) -> Path:
     """1200x630: brand gradient, portrait fading in on the right, name and tagline on the left."""
     photo_x = 1200 - OG_PHOTO_W
     # Left-to-right gradient: build a 630x1200 vertical one and rotate it.
@@ -113,11 +119,11 @@ def build_og() -> Path:
              # Fade the photo's left 40% into the background: opaque edge colour -> transparent.
              "(", "-size", f"630x{fade_w}", f"gradient:{edge}-none", "-rotate", "-90", ")",
              "-gravity", "NorthWest", "-composite", ")"]
-    serif, sans = _font(SERIF_CANDIDATES), _font(SANS_CANDIDATES)
+    serif, sans = ["-font", serif], ["-font", sans]
     text = [
         "-gravity", "NorthWest",
         "-fill", GOLD, "-draw", "rectangle 70,200 150,204",
-        *serif, "-fill", "white", "-pointsize", 84, "-annotate", "+66+225", "Roel Heremans",
+        *serif, "-fill", "white", "-pointsize", 92, "-annotate", "+66+218", "Roel Heremans",
         *sans, "-fill", "#D5DEE8", "-pointsize", 30, "-annotate", "+70+345", "AI-accelerated,",
         "-annotate", "+70+385", "human-verified analytics",
         "-fill", GOLD, "-draw", "rectangle 70,450 150,452",
@@ -126,10 +132,10 @@ def build_og() -> Path:
                      "-composite", *text, *JPEG_OUT], OUT / "og.jpg")
 
 
-def build_favicon() -> Path:
+def build_favicon(serif: str) -> Path:
     """64x64: serif "RH" monogram in gold on the brand navy."""
     return _convert(
-        ["-size", "64x64", f"xc:{BRAND[1]}", *_font(SERIF_CANDIDATES), "-fill", GOLD, "-pointsize", 40,
+        ["-size", "64x64", f"xc:{BRAND[1]}", "-font", serif, "-fill", GOLD, "-pointsize", 44,
          "-gravity", "Center", "-annotate", "+0+1", "RH", "-strip", *PNG_DETERMINISTIC],
         OUT / "favicon.png", fmt="PNG32:",
     )
@@ -143,7 +149,11 @@ def main(argv: list[str] | None = None) -> int:
         raise SystemExit(f"unknown photo target(s): {sorted(only - {r[1] for r in rows})}")
     produced = [build_photo(*row) for row in rows]
     if not only:
-        produced += [build_og(), build_favicon()]
+        with tempfile.TemporaryDirectory(prefix="rh-fonts-") as d:
+            tmp = Path(d)
+            serif = prepare_font("cormorant-garamond.woff2", SERIF_WEIGHT, tmp)
+            sans = prepare_font("inter.woff2", SANS_WEIGHT, tmp)
+            produced += [build_og(serif, sans), build_favicon(serif)]
     for p in produced:
         print(f"{p.relative_to(ROOT)}  {p.stat().st_size // 1024} KB")
     return 0

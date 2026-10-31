@@ -47,7 +47,7 @@ After a change: `./build-output.sh && pytest -q`.
     python tools/prepare_images.py                  # everything
     python tools/prepare_images.py og.jpg           # just one file
 
-It writes the hero, square and family portraits, `og.jpg` (1200x630) and `favicon.png`. The `<img>` sizes in `CONTENT["images"]` must match the files (a test checks this), and a test fails if an image in `assets/img/` is not used by any page. ImageMagick cannot read woff2, so `og.jpg` and `favicon.png` use the system fonts EB Garamond and Liberation Sans as stand-ins for Cormorant Garamond and Inter.
+It writes the hero, square and family portraits, `og.jpg` (1200x630) and `favicon.png`. The `<img>` sizes in `CONTENT["images"]` must match the files (a test checks this), and a test fails if an image in `assets/img/` is not used by any page. `og.jpg` and `favicon.png` are drawn with the site's real fonts: ImageMagick cannot read woff2, so the script converts `assets/fonts/*.woff2` to static TTFs in a temp dir at run time (Cormorant Garamond at weight 500 for the name and the RH monogram, Inter at 400 for the tagline). This needs `pip install -r requirements-dev.txt` (fonttools + brotli; not used by CI) and exits with an error if a font cannot be prepared.
 
 ## Colours
 Every colour is a CSS custom property in the one `:root` block at the top of `assets/css/styles.css` (ink blue `--brand`, `--brand-deep`, gold `--accent`, `--accent-text`, `--white`, `--bg`, …). A test fails if a hex/rgb/hsl colour appears anywhere else in the CSS, so changing the theme is a one-block edit. `--accent` (gold) is for buttons, rules and large words only; small gold text uses `--accent-text`, which a test checks for contrast. Fonts: Cormorant Garamond + Inter, self-hosted woff2 in `assets/fonts/` (SIL OFL).
@@ -81,4 +81,3 @@ Going live:
 - **German version:** dropped; `/de/` redirects to Home.
 - **Bitcoin:** each invoice comes with its own address, so none is published on the site.
 - **Best Way Healthcare / SpryFox:** Roel approved naming Best Way (no figures) and publishing the SpryFox results (2026-10-31). SpryFox's end client stays unnamed.
-- **og.jpg and favicon:** drawn with stand-in fonts (EB Garamond / Liberation Sans); redo with the real fonts if the exact look matters.
