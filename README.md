@@ -60,7 +60,7 @@ Screenshots every page (the five main pages and the case studies) at 1440px and 
 
 ## Deploy (phase 1: GitHub Pages test site)
 Pushing to `main` runs `.github/workflows/deploy.yml`: install, `pytest -q` (failing tests block the deploy), build, publish `output/` to
-https://roel-heremans.github.io/RoelHeremans-Site/ (repo `roel-heremans/RoelHeremans-Site`; Settings, Pages, Source: GitHub Actions). While `CONTENT["preview"]` is True every page carries `<meta name="robots" content="noindex">`, which keeps the test site out of search engines. The repo and the test URL do not exist yet; they are created after this build.
+https://roel-heremans.github.io/RoelHeremans-Site/ (repo `roel-heremans/RoelHeremans-Site`; Settings, Pages, Source: GitHub Actions). While `CONTENT["preview"]` is True every page carries `<meta name="robots" content="noindex">`, which keeps the test site out of search engines.
 
 ## Deploy (phase 2: roel-heremans.com) - open
 roel-heremans.com is currently on **Framer**. Pointing it at the new site is not done and the hosting is not decided (GitHub Pages with a custom domain is the natural option). When it is, build with `SITE_ENV=production` (no `noindex`, `canonical` tags, robots.txt allows all and lists the sitemap), change the DNS records at the registrar, and keep Framer running until the new site is confirmed live. Do not touch the MX / email records.
@@ -69,5 +69,5 @@ roel-heremans.com is currently on **Framer**. Pointing it at the new site is not
 - **Phase 2:** point roel-heremans.com (now on Framer) at the new site; see above.
 - **German version:** dropped; `/de/` redirects to Home.
 - **Bitcoin:** each invoice comes with its own address, so none is published on the site.
-- **Best Way Healthcare:** the client wording on the Work page is draft; confirm it with Roel before going live.
+- **Best Way Healthcare / SpryFox:** Roel approved naming Best Way (no figures) and publishing the SpryFox results (2026-10-31). SpryFox's end client stays unnamed.
 - **og.jpg and favicon:** drawn with stand-in fonts (EB Garamond / Liberation Sans); redo with the real fonts if the exact look matters.
