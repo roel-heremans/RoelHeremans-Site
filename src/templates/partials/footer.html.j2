@@ -1,0 +1,28 @@
+{% from "partials/icons.html.j2" import icon %}
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a class="wordmark footer-logo" href="{{ url('home') }}">{{ content.site_name | e }}</a>
+      <p class="footer-tagline">{{ content.footer_tagline | e }}</p>
+    </div>
+    <nav class="footer-nav" aria-label="{{ content.ui.footer_nav | e }}">
+      <ul>
+{%- for p in content.pages if p.in_nav %}
+        <li><a href="{{ url(p.id) }}"{% if p.id == page.id %} aria-current="page"{% endif %}>{{ p.nav | e }}</a></li>
+{%- endfor %}
+      </ul>
+    </nav>
+    <div class="footer-contact">
+      <ul class="footer-socials">
+        <li><a href="{{ content.links.linkedin | e }}" target="_blank" rel="noopener" aria-label="LinkedIn">{{ icon("linkedin") }}</a></li>
+        <li><a href="mailto:{{ content.links.email | e }}" aria-label="{{ content.ui.email | e }}">{{ icon("mail") }}</a></li>
+      </ul>
+      <p><a href="mailto:{{ content.links.email | e }}">{{ content.links.email | e }}</a></p>
+    </div>
+  </div>
+  <div class="container">
+    <div class="footer-bottom">
+      <p>© {{ year }} {{ content.site_name | e }}</p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,24 @@
+{#- Small template helpers. Import with context:
+      {% from "partials/helpers.html.j2" import img, heading_html, with_email, mailto with context %} -#}
+
+{#- <img> for a CONTENT image dict {src, w, h, alt}. Lazy by default; pass lazy=false
+    (and priority=true for the LCP image) above the fold. -#}
+{% macro img(image, lazy=true, priority=false, cls="") -%}
+<img{% if cls %} class="{{ cls }}"{% endif %} src="{{ root }}{{ image.src }}" alt="{{ image.alt | e }}" width="{{ image.w }}" height="{{ image.h }}"{% if lazy %} loading="lazy"{% endif %}{% if priority %} fetchpriority="high"{% endif %}>
+{%- endmacro %}
+
+{#- Heading text with its italic accent part: "Heading <em>accent</em>". -#}
+{% macro heading_html(block) -%}
+{{ block.heading | e }}{% if block.heading_accent is defined %} <em>{{ block.heading_accent | e }}</em>{% endif %}
+{%- endmacro %}
+
+{#- Escaped text with "{email}" turned into a mailto link. -#}
+{% macro with_email(text) -%}
+{%- set email = content.links.email | e -%}
+{{ text | e | replace("{email}", '<a class="text-link" href="mailto:' ~ email ~ '">' ~ email ~ '</a>') }}
+{%- endmacro %}
+
+{#- mailto: href to links.email with a prefilled subject. -#}
+{% macro mailto(subject) -%}
+mailto:{{ content.links.email | e }}?subject={{ subject | urlencode | e }}
+{%- endmacro %}

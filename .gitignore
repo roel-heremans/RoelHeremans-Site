@@ -1,6 +1,6 @@
 .venv/
 __pycache__/
 output/
-review/
 .pytest_cache/
+review/
 .superpowers/

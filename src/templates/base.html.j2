@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{% if content.preview %}<meta name="robots" content="noindex">
+{% endif %}{% set full_title = page.get("full_title") or (page.title ~ " | " ~ content.site_name) %}{% set description = page.get("description") or content.meta_description %}<title>{{ full_title | e }}</title>
+<meta name="description" content="{{ description | e }}">
+{%- if not content.preview %}
+<link rel="canonical" href="{{ content.site_url }}{{ path }}">
+{%- endif %}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ content.site_name | e }}">
+<meta property="og:locale" content="en_GB">
+<meta property="og:title" content="{{ full_title | e }}">
+<meta property="og:description" content="{{ description | e }}">
+<meta property="og:url" content="{{ content.site_url }}{{ path }}">
+{%- if asset_exists("img/og.jpg") %}
+<meta property="og:image" content="{{ content.site_url }}assets/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+{%- endif %}
+{%- if asset_exists("img/favicon.png") %}
+<link rel="icon" type="image/png" sizes="64x64" href="{{ root }}assets/img/favicon.png">
+{%- endif %}
+<link rel="preload" href="{{ root }}assets/fonts/cormorant-garamond.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ root }}assets/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{ root }}assets/css/styles.css">
+<script>document.documentElement.classList.add("js");</script>
+{% block head_extra %}{% endblock %}
+</head>
+<body class="page-{{ page.id }}">
+<a class="skip-link" href="#main">{{ content.ui.skip | e }}</a>
+{% include "partials/header.html.j2" %}
+<main id="main">
+{% block content %}{% endblock %}
+</main>
+{% include "partials/footer.html.j2" %}
+<script src="{{ root }}assets/js/site.js" defer></script>
+</body>
+</html>

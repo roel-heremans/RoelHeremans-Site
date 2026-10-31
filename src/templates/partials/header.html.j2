@@ -1,0 +1,16 @@
+<header class="site-header">
+  <div class="header-inner container">
+    <a class="wordmark" href="{{ url('home') }}">{{ content.site_name | e }}</a>
+    <div class="nav-panel" id="site-nav">
+      <nav class="site-nav" aria-label="{{ content.ui.menu | e }}">
+        <ul>
+{%- for p in content.pages if p.in_nav %}
+          <li><a href="{{ url(p.id) }}"{% if p.id == page.id %} aria-current="page"{% endif %}>{{ p.nav | e }}</a></li>
+{%- endfor %}
+        </ul>
+      </nav>
+      <a class="btn btn--accent nav-cta" href="{{ url('contact') }}">{{ content.ui.cta | e }}</a>
+    </div>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="{{ content.ui.menu_open | e }}" data-label-open="{{ content.ui.menu_open | e }}" data-label-close="{{ content.ui.menu_close | e }}"><span></span><span></span><span></span></button>
+  </div>
+</header>
