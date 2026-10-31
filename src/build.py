@@ -41,7 +41,7 @@ def build(out_dir: Path, content: dict) -> None:
     out_dir.mkdir(parents=True)
 
     pages = {p["id"]: p for p in content["pages"]}
-    base = content["site_url"]
+    base = content["preview_url"] if content["preview"] else content["site_url"]
 
     env = Environment(loader=FileSystemLoader(str(TEMPLATES_DIR)), autoescape=False,
                       undefined=StrictUndefined)
@@ -60,7 +60,7 @@ def build(out_dir: Path, content: dict) -> None:
         template = env.get_template(page["template"])
         path = page_path(page)
         html = template.render(content=content, page=page, path=path,
-                               root=rel(path, ""), year=year)
+                               root=rel(path, ""), year=year, site_base=base)
         _write(out_dir, path, html)
         print(f"  built {path or '/'}")
 
@@ -69,7 +69,7 @@ def build(out_dir: Path, content: dict) -> None:
         path = f"{old}/"
         target_path = redirect_target(target, pages)
         html = redirect.render(
-            content=content, path=path, root=rel(path, ""),
+            content=content, path=path, root=rel(path, ""), site_base=base,
             target_url=rel(path, target_path), canonical=base + target_path,
         )
         _write(out_dir, path, html)

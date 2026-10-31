@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="robots" content="noindex">
 <meta http-equiv="refresh" content="0; url={{ target_url }}">
-<link rel="canonical" href="{{ canonical }}">
-<title>{{ content.site_name | e }}</title>
+{% if not content.preview %}<link rel="canonical" href="{{ canonical }}">
+{% endif %}<title>{{ content.site_name | e }}</title>
 </head>
 <body>
 <p>{{ content.ui.redirect_text | e }} <a href="{{ target_url }}">{{ canonical }}</a></p>

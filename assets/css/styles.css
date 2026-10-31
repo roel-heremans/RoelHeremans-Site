@@ -470,7 +470,7 @@ main { display: block; }
 .facts__row--stack { grid-template-columns: 1fr; gap: 6px; }
 .pipeline { display: flex; flex-wrap: wrap; gap: 10px 0; margin-top: 6px; }
 .pipeline li {
-  position: relative; margin-left: 0; margin-right: 26px; padding: 5px 10px;
+  position: relative; margin-right: 26px; padding: 5px 10px;
   font-family: var(--mono); font-size: 12px; line-height: 1.4; color: var(--text);
   background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius);
 }

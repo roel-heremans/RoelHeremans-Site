@@ -13,7 +13,7 @@ Phase 1 (this spec) is a GitHub Pages test site, like NinaSuza-Site:
 out of scope. Write it up as an open item in the README.
 
 ## Reference implementation: copy it, then adapt
-`/home/roel/Documents/PersonalRepos/NinaWebPage` is the template. Read its README,
+The sibling NinaWebPage repo (github.com/roel-heremans/NinaSuza-Site) is the template. Read its README,
 `docs/superpowers/specs/2026-10-31-ninasuza-site-design.md`, `src/build.py`, `src/content.py`,
 `src/templates/**`, `assets/css/styles.css`, `assets/js/site.js`, `tests/**`, `tools/screenshots.py`,
 `tools/prepare_images.py` and `.github/workflows/deploy.yml`. Reuse its architecture, conventions and

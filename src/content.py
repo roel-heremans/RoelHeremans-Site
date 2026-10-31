@@ -9,6 +9,8 @@ CONTENT = {
     "preview": True,
     "site_name": "Roel Heremans",
     "site_url": "https://www.roel-heremans.com/",
+    # Base URL used instead of site_url while preview is True (GitHub Pages test site).
+    "preview_url": "https://roel-heremans.github.io/RoelHeremans-Site/",
     "meta_description": "Roel Heremans solves analytics problems with Claude Code: "
                         "AI-accelerated, human-verified, every number tested by hand.",
     # Pages, in navigation order. The page lives at /<slug>/ ("" = home).
@@ -106,7 +108,7 @@ CONTENT = {
         "redirect_text": "This page has moved:",
     },
     "footer_tagline": "AI-accelerated, human-verified analytics.",
-    "footer_location": "Belgium",
+    "footer_location": "Madeira, Portugal",
 
     # ── Images (tools/prepare_images.py makes these from original/images/). ──
     "images": {

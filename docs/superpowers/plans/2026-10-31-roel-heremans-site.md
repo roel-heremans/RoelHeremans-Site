@@ -1,7 +1,7 @@
 # roel-heremans.com site — implementation plan
 
 Spec: `docs/superpowers/specs/2026-10-31-roel-heremans-site-design.md` (binding authority; read it fully).
-Reference implementation: `/home/roel/Documents/PersonalRepos/NinaWebPage` (read-only, never modify it).
+Reference implementation: the sibling NinaWebPage repo (github.com/roel-heremans/NinaSuza-Site) (read-only, never modify it).
 Content source: `original/draft/roel-heremans.html`.
 
 ## Global Constraints

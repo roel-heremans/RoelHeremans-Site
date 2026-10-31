@@ -7,15 +7,15 @@
 {% endif %}{% set full_title = page.get("full_title") or (page.title ~ " | " ~ content.site_name) %}{% set description = page.get("description") or content.meta_description %}<title>{{ full_title | e }}</title>
 <meta name="description" content="{{ description | e }}">
 {%- if not content.preview %}
-<link rel="canonical" href="{{ content.site_url }}{{ path }}">
+<link rel="canonical" href="{{ site_base }}{{ path }}">
 {%- endif %}
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="{{ content.site_name | e }}">
 <meta property="og:locale" content="en_GB">
 <meta property="og:title" content="{{ full_title | e }}">
 <meta property="og:description" content="{{ description | e }}">
-<meta property="og:url" content="{{ content.site_url }}{{ path }}">
-<meta property="og:image" content="{{ content.site_url }}assets/img/og.jpg">
+<meta property="og:url" content="{{ site_base }}{{ path }}">
+<meta property="og:image" content="{{ site_base }}assets/img/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">

@@ -8,6 +8,7 @@ PATHS = ["", "approach/", "work/", "about/", "contact/"]
 PAGES = {p["id"]: p for p in CONTENT["pages"]}
 NOINDEX = '<meta name="robots" content="noindex">'
 BASE = "https://www.roel-heremans.com/"
+PREVIEW_BASE = "https://roel-heremans.github.io/RoelHeremans-Site/"
 
 
 def h1_text(html):
@@ -55,7 +56,7 @@ def test_title_and_head_meta(built):
         assert f"<title>{title}</title>" in html, page["id"]
         d = re.search(r'<meta name="description" content="([^"]+)"', html)
         assert d and d.group(1).strip(), path
-        assert f'<meta property="og:url" content="{BASE}{path}">' in html
+        assert f'<meta property="og:url" content="{PREVIEW_BASE}{path}">' in html
         for prop in ("og:title", "og:description", "og:locale", "og:site_name"):
             assert re.search(rf'<meta property="{prop}" content="[^"]+">', html), (path, prop)
         assert "assets/css/styles.css" in html and "assets/js/site.js" in html
@@ -110,6 +111,28 @@ def test_production_indexable(built_production):
     assert f"Sitemap: {BASE}sitemap.xml" in robots
 
 
+def test_preview_social_urls_use_pages_base(built):
+    for p, f in zip(PATHS, page_files(built)):
+        html = f.read_text()
+        assert f'<meta property="og:url" content="{PREVIEW_BASE}{p}">' in html, f
+        assert f'<meta property="og:image" content="{PREVIEW_BASE}assets/img/og.jpg">' in html, f
+        assert "www.roel-heremans.com" not in html, f
+
+
+def test_production_social_urls_use_site_base(built_production):
+    for p, f in zip(PATHS, page_files(built_production)):
+        html = f.read_text()
+        assert f'<meta property="og:url" content="{BASE}{p}">' in html, f
+        assert f'<meta property="og:image" content="{BASE}assets/img/og.jpg">' in html, f
+        assert "github.io" not in html, f
+
+
+def test_production_redirects_have_canonical(built_production):
+    for old, want in OLD_URLS.items():
+        html = (built_production / old / "index.html").read_text()
+        assert f'<link rel="canonical" href="{BASE}{want}">' in html, old
+
+
 def test_default_env_keeps_preview():
     assert content_for_env({})["preview"] is True
     assert content_for_env({"SITE_ENV": "staging"})["preview"] is True
@@ -117,7 +140,7 @@ def test_default_env_keeps_preview():
 
 def test_sitemap_lists_the_five_pages(built):
     locs = re.findall(r"<loc>([^<]+)</loc>", (built / "sitemap.xml").read_text())
-    assert sorted(locs) == sorted(BASE + p for p in PATHS)
+    assert sorted(locs) == sorted(PREVIEW_BASE + p for p in PATHS)
 
 
 # Old Framer URL -> new output path + anchor.
@@ -144,6 +167,6 @@ def test_old_urls_redirect(built):
         want_path, _, anchor = want.partition("#")
         assert _resolve(f, target) == root / want_path / "index.html", (old, target)
         assert target.endswith(f"#{anchor}" if anchor else "/"), (old, target)
-        assert f'<link rel="canonical" href="{BASE}{want}">' in html, old
+        assert 'rel="canonical"' not in html, old
         assert f'<a href="{target}">' in html.split("<body", 1)[1], old
         assert NOINDEX in html
