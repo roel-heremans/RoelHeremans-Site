@@ -497,7 +497,7 @@ main { display: block; }
 .project--wide .body { max-width: 760px; }
 /* Case-study pages (case-study.html.j2): key results in the facts panel, previous/next nav. */
 .case-hero .chips { margin-bottom: 32px; }
-.case-hero .lead { text-wrap: pretty; }
+.case-hero .lead { max-width: 760px; text-wrap: pretty; }
 .key-results li { position: relative; padding: 4px 0 4px 18px; }
 .key-results li::before {
   content: ""; position: absolute; left: 0; top: 16px; width: 7px; height: 1px; background: var(--accent);

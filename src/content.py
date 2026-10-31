@@ -21,7 +21,7 @@ PROJECTS = [
                 "confidence score that sends uncertain lines to a human. 84% of predictions correct.",
         "industry": "Insurance analytics",
         "engagement": "Direct client",
-        "lede": "Reading veterinary invoices line by line, with a model that says how sure it is.",
+        "lede": "Reading veterinary invoices line by line, with a model that knows how sure it is.",
         "description": "SpryFox case study: veterinary invoice lines classified into pet insurance "
                        "coverage codes with biomedical embeddings and calibrated confidence. "
                        "84% of predictions correct.",
@@ -80,8 +80,8 @@ PROJECTS = [
             "residual flags the anomalies.",
         ],
         "results": [
-            "An online detector that compares each new reading with the model's prediction and "
-            "flags the abnormal ones as they arrive.",
+            "An online anomaly detector: at each step an XGBoost model predicts the next reading, "
+            "and a z-score on the residual flags readings that fall outside the expected range.",
         ],
         "client": "Sombreffe, Belgium · founded 2018 · environmental services (energy efficiency) "
                   "· 10+ employees",
@@ -192,8 +192,8 @@ PROJECTS = [
             "time taken.",
         ],
         "results": [
-            "A working demo that summarises pasted text and uploaded PDFs, long documents included, "
-            "with an open LLM instead of ChatGPT.",
+            "A demo web app: the user opens a link, enters or uploads a text and gets the summary, "
+            "together with the number of words generated and the time it took.",
         ],
         "client": "Polpo · Amsterdam, Netherlands · founded 2017 · political information "
                   "· 15+ employees",
@@ -229,8 +229,9 @@ PROJECTS = [
             "I used Kendall tau to rank which LLM agreed best with the experts.",
         ],
         "results": [
-            "A ranking of the LLMs by how well their answers agree with the experts, which shows "
-            "which model to pick.",
+            "BERT sentence similarity and BERT embedding similarity came out as the two most "
+            "promising measures, and Kendall tau then ranked the LLMs by how well they agreed with "
+            "the experts.",
         ],
         "client": "Berlin, Germany · founded 2014 · business consulting and services "
                   "· 30–50 employees",

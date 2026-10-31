@@ -144,3 +144,15 @@ def test_footer_nav_all_work_prev_next(built):
             assert resolve(f, prev.group(1)) == case_file(built, PROJECTS[i - 1]["id"]).resolve()
         if nxt:
             assert resolve(f, nxt.group(1)) == case_file(built, PROJECTS[i + 1]["id"]).resolve()
+
+
+def test_every_number_on_a_case_page_comes_from_its_project_data(built):
+    """No number can be added in a template: every digit sequence in the case content (hero,
+    body, side panel, quote; not the prev/next nav or the shared CTA) is in that project's data."""
+    for p in PROJECTS:
+        html = main_of(case_file(built, p["id"]).read_text())
+        content = html.split('<nav class="section', 1)[0]
+        data_numbers = set(re.findall(r"\d+", repr(p)))
+        page_numbers = set(re.findall(r"\d+", text(content)))
+        assert page_numbers, p["id"]
+        assert page_numbers <= data_numbers, (p["id"], page_numbers - data_numbers)
