@@ -4,13 +4,6 @@ from urllib.parse import unquote
 SKIP_PREFIXES = ("http://", "https://", "mailto:", "tel:", "//", "data:", "javascript:")
 ATTR_RE = re.compile(r"""\b(?:href|src)\s*=\s*(["'])(.*?)\1""", re.I | re.S)
 URL_RE = re.compile(r"""url\(\s*(["']?)(.*?)\1\s*\)""", re.I | re.S)
-# Photos that Task 3 (tools/prepare_images.py) creates. Until they exist, a missing file at
-# exactly these paths is tolerated; once they exist they are checked like every other link.
-# Task 3: remove this exemption.
-PENDING_IMAGES = {"assets/img/roel-portrait-hero.jpg", "assets/img/roel-portrait-square.jpg",
-                  "assets/img/roel-family.jpg"}
-
-
 def _files(out, exts):
     return [p for p in sorted(out.rglob("*")) if p.is_file() and p.suffix in exts]
 
@@ -42,9 +35,6 @@ def test_internal_links_resolve(built):
             if target is None:
                 continue
             count += 1
-            if root in target.parents and not target.exists() and \
-                    str(target.relative_to(root)) in PENDING_IMAGES:
-                continue
             if not target.is_file() or root not in target.parents:
                 missing.append((str(p.relative_to(built)), ref))
     assert count > 5 * 8

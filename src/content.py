@@ -107,14 +107,14 @@ CONTENT = {
     "footer_tagline": "AI-accelerated, human-verified analytics.",
     "footer_location": "Belgium",
 
-    # ── Images (Task 3's tools/prepare_images.py makes these from original/images/). ──
+    # ── Images (tools/prepare_images.py makes these from original/images/). ──
     "images": {
-        "portrait_hero": {"src": "assets/img/roel-portrait-hero.jpg", "w": 2000, "h": 1333,
-                          "alt": "Roel Heremans smiling in front of an old green door"},
+        "portrait_hero": {"src": "assets/img/roel-portrait-hero.jpg", "w": 2000, "h": 1334,
+                          "alt": "Roel Heremans smiling in front of a weathered wooden door"},
         "portrait_square": {"src": "assets/img/roel-portrait-square.jpg", "w": 1200, "h": 1200,
                             "alt": "Portrait of Roel Heremans"},
         "family": {"src": "assets/img/roel-family.jpg", "w": 1200, "h": 846,
-                   "alt": "Roel with his wife and their two children, all dressed in white"},
+                   "alt": "Roel with his family, all dressed in white"},
     },
 
     # ── Shared blocks ──
