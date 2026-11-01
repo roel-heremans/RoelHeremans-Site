@@ -66,10 +66,10 @@ https://roel-heremans.github.io/RoelHeremans-Site/ (repo `roel-heremans/RoelHere
 The same workflow has a second job, `strato`, that builds with `SITE_ENV=production` (no `noindex`, canonical tags, robots.txt allows all and lists the sitemap, plus an `.htaccess` that redirects http to https and roel-heremans.com to https://www.roel-heremans.com/) and uploads `output/` over SFTP with `tools/deploy_strato.py`. It only runs when the repository variable `STRATO_DEPLOY` is `true`; the GitHub Pages test build stays `noindex`.
 
 Settings, Secrets and variables, Actions:
-- secrets `STRATO_HOST`, `STRATO_USER`, `STRATO_PASSWORD`, `STRATO_PORT` (22 unless STRATO says otherwise); same STRATO account as realhealthkombucha.com, so the same values;
+- secrets `STRATO_HOST`, `STRATO_USER`, `STRATO_PASSWORD`, `STRATO_PORT` (22 unless STRATO says otherwise): the SFTP login of the **Hosting Basic** package (STRATO panel, Hosting Basic, SFTP-Zugänge), the same one realhealthkombucha.com uses. Not the Hosting Plus (sattva-reset.com) login: that is a different webspace;
 - variables `STRATO_REMOTE_PATH` = `/roelheremans` and `STRATO_DEPLOY` = `true`.
 
-The webspace also hosts realhealthkombucha.com and sattva-reset.com, so the script refuses the webspace root and any non-empty folder without its manifest `.roelheremans-deploy.json`; it uploads only changed files and deletes only files it put there itself, so it never touches the other sites' folders. The server's host key must match `tools/strato_known_hosts` (`ssh-keyscan -t ed25519,rsa <host>` if the host ever changes).
+The webspace also hosts realhealthkombucha.com, so the script refuses the webspace root and any non-empty folder without its manifest `.roelheremans-deploy.json`; it uploads only changed files and deletes only files it put there itself, so it never touches the other sites' folders. The server's host key must match `tools/strato_known_hosts` (`ssh-keyscan -t ed25519,rsa <host>` if the host ever changes).
 
 Going live:
 1. Set the secrets and variables above. The first deploy creates the folder `/roelheremans` (no manual step in the STRATO panel needed for that).
@@ -77,7 +77,7 @@ Going live:
 3. Keep Framer running until the new site is confirmed live (https, www redirect, a few pages), then cancel it.
 
 ## Open items
-- **Phase 2:** code is in place; still to do: set the GitHub secrets/variables, point roel-heremans.com and www at `/roelheremans` in STRATO (replaces the Framer records, MX untouched), confirm live, then drop Framer. See above.
+- **Phase 2:** live since 2026-10-31 at https://www.roel-heremans.com/ (STRATO Hosting Basic, folder `/roelheremans`, SSL Basic certificate for both names). Still to do: cancel Framer.
 - **German version:** dropped; `/de/` redirects to Home.
 - **Bitcoin:** each invoice comes with its own address, so none is published on the site.
 - **Best Way Healthcare / SpryFox:** Roel approved naming Best Way (no figures) and publishing the SpryFox results (2026-10-31). SpryFox's end client stays unnamed.
